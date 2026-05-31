@@ -20,6 +20,13 @@
         .btn-submit { background: linear-gradient(135deg, #00b4db, #0083b0); border: none; border-radius: 25px; padding: 15px 50px; color: white; font-weight: bold; font-size: 1.1rem; width: 100%; margin-top: 20px; }
         .btn-submit:hover { opacity: 0.9; color: white; }
         .tf-badge { background: #e3f2fd; color: #0083b0; border-radius: 10px; padding: 3px 10px; font-size: 0.8rem; font-weight: bold; margin-left: 10px; }
+        .timer-container { position: fixed; top: 20px; right: 20px; background: linear-gradient(135deg, #00b4db, #0083b0); border-radius: 15px; padding: 15px 25px; text-align: center; box-shadow: 0 10px 30px rgba(0,180,219,0.4); z-index: 1000; }
+.timer-label { color: rgba(255,255,255,0.8); font-size: 0.8rem; display: block; }
+.timer-display { color: white; font-size: 2rem; font-weight: bold; display: block; }
+.timer-warning { background: linear-gradient(135deg, #ff9800, #ff5722) !important; }
+.timer-danger { background: linear-gradient(135deg, #ff5252, #d32f2f) !important; animation: pulse 1s infinite; }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+    
     </style>
 </head>
 <body>
@@ -39,7 +46,7 @@
     <h2>📝 Quiz Time!</h2>
     <p class="subtitle">Good luck, <%= studentName %>! Answer all questions below.</p>
     
-    <form action="ResultServlet" method="post">
+    <form action="ResultServlet" method="post" id="quizForm">
         <% int qNum = 1; for(Question q : questions) { %>
         <div class="question-card">
             <div class="question-text">
@@ -68,5 +75,45 @@
         <button type="submit" class="btn btn-submit">🏁 Submit Quiz</button>
     </form>
 </div>
+<div class="timer-container" id="timerBox">
+    <span class="timer-label">⏱️ Time Remaining</span>
+    <span class="timer-display" id="timerDisplay">10:00</span>
+</div>
+
+<script>
+    var totalSeconds = 600; // 10 minutes
+    var timerDisplay = document.getElementById('timerDisplay');
+    var timerBox = document.getElementById('timerBox');
+    var quizForm = document.getElementById('quizForm');
+
+    var countdown = setInterval(function() {
+        totalSeconds--;
+        
+        var minutes = Math.floor(totalSeconds / 60);
+        var seconds = totalSeconds % 60;
+        
+        timerDisplay.textContent = 
+            (minutes < 10 ? '0' : '') + minutes + ':' + 
+            (seconds < 10 ? '0' : '') + seconds;
+        
+        // Warning at 3 minutes
+        if(totalSeconds <= 180 && totalSeconds > 60) {
+            timerBox.className = 'timer-container timer-warning';
+        }
+        
+        // Danger at 1 minute
+        if(totalSeconds <= 60) {
+            timerBox.className = 'timer-container timer-danger';
+        }
+        
+        // Auto submit when time runs out
+        if(totalSeconds <= 0) {
+            clearInterval(countdown);
+            timerDisplay.textContent = '00:00';
+            alert('⏰ Time is up! Your quiz is being submitted automatically!');
+            document.getElementById('quizForm').submit();
+        }
+    }, 1000);
+</script>
 </body>
 </html>
