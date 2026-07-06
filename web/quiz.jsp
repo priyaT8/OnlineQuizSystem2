@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <!-- page developed by Neha Ghosh-->
     <title>Quiz - Quiz System</title>
     <link rel="stylesheet" href="bootstrap.min.css">
     <style>
