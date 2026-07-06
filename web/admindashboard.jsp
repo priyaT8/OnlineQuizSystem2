@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*, db.DBConnection" %>
 <!DOCTYPE html>
+<!-- Admin Dashboard - Developed by [Mandira Das] -->
 <html>
 <head>
     <title>Admin Dashboard - Quiz System</title>
