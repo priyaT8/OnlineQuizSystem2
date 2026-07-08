@@ -47,4 +47,17 @@ public class StudentDAO {
         }
         return null;
     }
+    public boolean deleteStudent(int id) {
+    try {
+        Connection con = DBConnection.getConnection();
+        String sql = "DELETE FROM students WHERE id=?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, id);
+        int rows = ps.executeUpdate();
+        return rows > 0;
+    } catch (Exception e) {
+        System.out.println(e.getMessage());
+        return false;
+    }
+}
 }

@@ -82,9 +82,10 @@
         <table>
             <tr>
                 <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Username</th>
+<th>Name</th>
+<th>Email</th>
+<th>Username</th>
+<th>Action</th>
             </tr>
             <%
                 PreparedStatement ps4 = con.prepareStatement("SELECT * FROM students");
@@ -96,6 +97,13 @@
                 <td><%= rs4.getString("name") %></td>
                 <td><%= rs4.getString("email") %></td>
                 <td><%= rs4.getString("username") %></td>
+                <td>
+    <a href="DeleteStudentServlet?id=<%= rs4.getInt("id") %>" 
+       onclick="return confirm('Are you sure?')"
+       style="background:linear-gradient(135deg,#ff5252,#d32f2f);color:white;padding:5px 15px;border-radius:10px;text-decoration:none;font-size:0.85rem;">
+       🗑️ Delete
+    </a>
+</td>
             </tr>
             <% } %>
         </table>
@@ -133,8 +141,48 @@
             <% } %>
         </table>
     </div>
+    <!-- Questions Table -->
+<div class="table-card">
+    <h5>❓ Questions List</h5>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Paper</th>
+            <th>Question</th>
+            <th>Type</th>
+            <th>Action</th>
+        </tr>
+        <%
+            PreparedStatement ps6 = con.prepareStatement(
+                "SELECT q.*, qp.paper_name FROM questions q JOIN question_paper qp ON q.paper_id = qp.paper_id ORDER BY q.paper_id");
+            ResultSet rs6 = ps6.executeQuery();
+            while(rs6.next()) {
+        %>
+        <tr>
+            <td><%= rs6.getInt("q_id") %></td>
+            <td><span class="<%= rs6.getString("paper_name").equals("Java Basics") ? "badge-java" : "badge-math" %>"><%= rs6.getString("paper_name") %></span></td>
+            <td><%= rs6.getString("question") %></td>
+            <td><%= rs6.getString("question_type") %></td>
+            <td>
+                <a href="editquestion.jsp?id=<%= rs6.getInt("q_id") %>" 
+                   style="background:linear-gradient(135deg,#00b4db,#0083b0);color:white;padding:5px 10px;border-radius:8px;text-decoration:none;font-size:0.8rem;margin-right:5px;">
+                   ✏️ Edit
+                </a>
+                <a href="DeleteQuestionServlet?id=<%= rs6.getInt("q_id") %>" 
+                   onclick="return confirm('Delete this question?')"
+                   style="background:linear-gradient(135deg,#ff5252,#d32f2f);color:white;padding:5px 10px;border-radius:8px;text-decoration:none;font-size:0.8rem;">
+                   🗑️ Delete
+                </a>
+            </td>
+        </tr>
+        <% } %>
+    </table>
+</div>
+
+<div class="text-center mt-3">
 
     <div class="text-center mt-3">
+        <a href="addquestion.jsp" class="btn btn-logout" style="background:linear-gradient(135deg,#00b4db,#0083b0);margin-right:10px;">➕ Add Question</a>
         <a href="LogoutServlet" class="btn btn-logout">🚪 Logout</a>
     </div>
 </div>
